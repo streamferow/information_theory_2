@@ -73,29 +73,8 @@ The UI is inspired by classic 90s video games:
 .
 ├── docs/
 │   └── index.html          # Single-file web app (GitHub Pages)
-├── backend/
-│   ├── calculator.py       # Optional: Python calculations (CLI)
-│   └── api.py              # Optional: Flask API
-├── requirements.txt        # Python dependencies (optional)
 └── README.md               # This file
 ```
-
-## 🐍 Optional Python Backend
-
-For those who prefer Python calculations:
-
-```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Run CLI calculator
-python backend/calculator.py
-
-# Run API server (if needed for other integrations)
-python backend/api.py
-```
-
-**Note:** Python backend is completely optional. The web app works without it.
 
 ## 📖 Mathematical Background
 
