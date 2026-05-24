@@ -146,22 +146,6 @@
             font-size: 9px;
         }
 
-        .backend-status {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 5px 10px;
-            background: #000;
-            border: 2px solid var(--text-dim);
-            color: var(--text-dim);
-            font-size: 7px;
-        }
-
-        .backend-status.python {
-            border-color: var(--accent-2);
-            color: var(--accent-2);
-            text-shadow: 0 0 5px var(--accent-2);
-        }
-
         @keyframes blink {
             0%, 50% { opacity: 1; }
             51%, 100% { opacity: 0; }
@@ -601,7 +585,6 @@
             <p class="subtitle">INFORMATION THEORY // TASK #2</p>
             <p class="subtitle">BINARY CHANNEL WITH NOISE</p>
             <p class="insert-coin">PRESS CALCULATE TO START</p>
-            <div class="backend-status" id="backend-status">JS MODE</div>
         </div>
 
         <div class="main-grid">
@@ -693,7 +676,7 @@
             
             <div class="ascii-diagram">
 <span class="highlight-4">TRANSMITTER</span>                          <span class="highlight-1">RECEIVER</span>
-    ┌─────┐                                  ┌─────┐
+    ┌─────┐                                   ┌─────┐
     │  0  │──────┬───────────────────────────→│  0  │  <span class="highlight-2">prob: 1-P-M</span>
     └─────┘      │                            └─────┘
                  │         ┌─────────┐
@@ -741,10 +724,6 @@
     </div>
 
     <script>
-        // === CONFIGURATION ===
-        const API_BASE_URL = 'http://localhost:5000';  // Python backend URL
-        let usePythonBackend = false;  // Toggle to use Python API instead of JS
-
         // Sync sliders and inputs
         document.getElementById('P-slider').addEventListener('input', function() {
             document.getElementById('P').value = this.value;
@@ -772,33 +751,39 @@
             return Math.log(x) / Math.log(2);
         }
 
-        // Validate inputs
-        function validateInputs(N, P, M, errorDiv) {
+        function calculate() {
+            const errorDiv = document.getElementById('error');
+            const successDiv = document.getElementById('success');
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+
+            const N = parseFloat(document.getElementById('N').value);
+            const P = parseFloat(document.getElementById('P').value);
+            const M = parseFloat(document.getElementById('M').value);
+
+            // Validation
             if (isNaN(N) || N <= 0) {
                 errorDiv.textContent = 'ERROR: N MUST BE POSITIVE NUMBER';
                 errorDiv.style.display = 'block';
-                return false;
+                return;
             }
             if (isNaN(P) || P < 0 || P > 0.5) {
                 errorDiv.textContent = 'ERROR: P MUST BE 0 TO 0.5';
                 errorDiv.style.display = 'block';
-                return false;
+                return;
             }
             if (isNaN(M) || M < 0 || M > 0.5) {
                 errorDiv.textContent = 'ERROR: M MUST BE 0 TO 0.5';
                 errorDiv.style.display = 'block';
-                return false;
+                return;
             }
             if (P + M > 1) {
                 errorDiv.textContent = 'ERROR: P + M MUST NOT EXCEED 1';
                 errorDiv.style.display = 'block';
-                return false;
+                return;
             }
-            return true;
-        }
 
-        // JavaScript calculation (local)
-        function calculateLocal(N, P, M) {
+            // Calculations
             const H_X = 1.0;
             const q_correct = 1 - P - M;
             
@@ -818,86 +803,13 @@
             const I_XY = Math.max(0, H_Y - H_Y_X);
             const capacity = N * I_XY;
 
-            return { H_X, H_Y_X, H_Y, I_XY, capacity };
-        }
-
-        // Python API calculation
-        async function calculatePython(N, P, M) {
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/calculate`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ N, P, M })
-                });
-                
-                if (!response.ok) {
-                    const error = await response.json();
-                    throw new Error(error.error || 'API ERROR');
-                }
-                
-                const result = await response.json();
-                return result.data;
-            } catch (e) {
-                throw e;
-            }
-        }
-
-        // Get chart data from Python API
-        async function getChartDataPython(N, M) {
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/chart`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ N, M })
-                });
-                
-                if (!response.ok) return null;
-                
-                const result = await response.json();
-                return result.data;
-            } catch (e) {
-                return null;
-            }
-        }
-
-        // Main calculate function
-        async function calculate() {
-            const errorDiv = document.getElementById('error');
-            const successDiv = document.getElementById('success');
-            errorDiv.style.display = 'none';
-            successDiv.style.display = 'none';
-
-            const N = parseFloat(document.getElementById('N').value);
-            const P = parseFloat(document.getElementById('P').value);
-            const M = parseFloat(document.getElementById('M').value);
-
-            if (!validateInputs(N, P, M, errorDiv)) return;
-
-            let result;
-            let usedBackend = false;
-
-            // Try Python backend first if enabled
-            if (usePythonBackend) {
-                try {
-                    result = await calculatePython(N, P, M);
-                    usedBackend = true;
-                } catch (e) {
-                    // Fallback to local JS
-                    result = calculateLocal(N, P, M);
-                }
-            } else {
-                result = calculateLocal(N, P, M);
-            }
-
             // Update displays
-            document.getElementById('H_X').textContent = result.H_X.toFixed(3);
-            document.getElementById('H_XY').textContent = result.H_Y_X.toFixed(3);
-            document.getElementById('I_XY').textContent = result.I_XY.toFixed(4);
-            document.getElementById('capacity').textContent = result.capacity.toFixed(2);
+            document.getElementById('H_X').textContent = H_X.toFixed(3);
+            document.getElementById('H_XY').textContent = H_Y_X.toFixed(3);
+            document.getElementById('I_XY').textContent = I_XY.toFixed(4);
+            document.getElementById('capacity').textContent = capacity.toFixed(2);
 
-            successDiv.textContent = usedBackend ? 
-                '>> PYTHON API CALCULATION COMPLETE <<' : 
-                '>> JS CALCULATION COMPLETE <<';
+            successDiv.textContent = '>> CALCULATION COMPLETE <<';
             successDiv.style.display = 'block';
 
             drawChart(N, P, M);
@@ -994,28 +906,8 @@
             });
         }
 
-        // Check if Python backend is available on load
-        async function checkBackend() {
-            const statusDiv = document.getElementById('backend-status');
-            try {
-                const response = await fetch(`${API_BASE_URL}/health`, { 
-                    method: 'GET',
-                    mode: 'cors'
-                });
-                if (response.ok) {
-                    usePythonBackend = true;
-                    statusDiv.textContent = 'PYTHON API CONNECTED';
-                    statusDiv.classList.add('python');
-                    console.log('>> PYTHON BACKEND CONNECTED <<');
-                }
-            } catch (e) {
-                statusDiv.textContent = 'JS MODE (PYTHON API: localhost:5000)';
-                console.log('>> USING LOCAL JS CALCULATIONS <<');
-            }
-        }
-
         // Initial calculation
-        checkBackend().then(() => calculate());
+        calculate();
     </script>
 </body>
 </html>

@@ -2,11 +2,17 @@
 
 **Information Theory - Task #2**
 
-A retro-styled web application for calculating the capacity of a binary communication channel with noise, featuring both frontend (JavaScript) and backend (Python) implementations.
+A retro-styled web application for calculating the capacity of a binary communication channel with noise. Works entirely in your browser!
 
 ![Retro Style](https://img.shields.io/badge/style-retro%2090s-ff0066)
-![Python](https://img.shields.io/badge/python-3.8%2B-blue)
-![Flask](https://img.shields.io/badge/flask-3.0-green)
+![Pure JS](https://img.shields.io/badge/pure-javascript-yellow)
+![GitHub Pages](https://img.shields.io/badge/deployed-github%20pages-blue)
+
+## 🌐 Live Demo
+
+**https://streamferow.github.io/information_theory_2/**
+
+No installation required! Open in any browser and start calculating.
 
 ## 📊 About
 
@@ -28,96 +34,30 @@ Where:
 - H(Y|X) = Conditional entropy
 ```
 
-## 🚀 Quick Start
+## 🚀 How to Use
 
-### Option 1: GitHub Pages (Frontend Only)
+### Online (GitHub Pages)
+Simply open: **https://streamferow.github.io/information_theory_2/**
 
-The frontend is deployed at:
-**https://streamferow.github.io/information_theory_2/**
-
-Works entirely in your browser with JavaScript calculations!
-
-### Option 2: Local Python Backend
-
-#### Installation
-
+### Local (No Internet Required)
 ```bash
 # Clone repository
 git clone https://github.com/streamferow/information_theory_2.git
-cd information_theory_2
 
-# Install dependencies
-pip install -r requirements.txt
+# Open the file in browser
+cd information_theory_2/docs
+open index.html  # or double-click the file
 ```
-
-#### Running CLI Calculator
-
-```bash
-python backend/calculator.py
-```
-
-#### Running API Server
-
-```bash
-python backend/api.py
-```
-
-The API will start on `http://localhost:5000`
 
 ## 🎯 Features
 
-### Frontend (index.html)
 - 🎨 **Retro 90s pixel art design** - CRT scanlines, pixel font, neon colors
 - 📈 **Interactive charts** - Capacity vs flip probability visualization
 - 🕹️ **Arcade-style UI** - Press Start 2P font, pixel-perfect borders
-- ⚡ **Real-time calculation** - JavaScript computation engine
+- ⚡ **Real-time calculation** - Pure JavaScript computation engine
 - 📱 **Responsive design** - Works on mobile and desktop
-
-### Backend (Python)
-- 🐍 **Pure Python calculations** - No JavaScript required
-- 🔢 **Mathematical accuracy** - Shannon's formulas implemented correctly
-- 🌐 **REST API** - Flask-based API for frontend integration
-- 📊 **Chart data generation** - Backend-generated chart datasets
-- ✅ **Input validation** - Comprehensive parameter checking
-
-## 📡 API Endpoints
-
-### POST `/api/calculate`
-Calculate channel capacity
-
-**Request:**
-```json
-{
-  "N": 1000,
-  "P": 0.01,
-  "M": 0.05
-}
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "H_X": 1.0,
-    "H_Y_X": 0.3525,
-    "H_Y": 0.9557,
-    "I_XY": 0.6032,
-    "capacity": 603.21
-  }
-}
-```
-
-### POST `/api/chart`
-Generate chart data for visualization
-
-**Request:**
-```json
-{
-  "N": 1000,
-  "M": 0.05
-}
-```
+- 🔢 **Shannon's formulas** - Accurate mathematical calculations
+- 📊 **Visual channel model** - ASCII diagram of the communication channel
 
 ## 🎨 Design Inspiration
 
@@ -132,27 +72,30 @@ The UI is inspired by classic 90s video games:
 ```
 .
 ├── docs/
-│   └── index.html          # Frontend (GitHub Pages)
+│   └── index.html          # Single-file web app (GitHub Pages)
 ├── backend/
-│   ├── calculator.py       # Core calculation logic
-│   └── api.py              # Flask REST API
-├── requirements.txt        # Python dependencies
+│   ├── calculator.py       # Optional: Python calculations (CLI)
+│   └── api.py              # Optional: Flask API
+├── requirements.txt        # Python dependencies (optional)
 └── README.md               # This file
 ```
 
-## 🔧 Development
+## 🐍 Optional Python Backend
 
-### Frontend Development
-The frontend is a single HTML file with embedded CSS and JavaScript. No build step required!
+For those who prefer Python calculations:
 
-### Backend Development
 ```bash
-# Run tests
-python -m pytest backend/
+# Install dependencies
+pip install -r requirements.txt
 
-# Run with debug mode
-FLASK_DEBUG=1 python backend/api.py
+# Run CLI calculator
+python backend/calculator.py
+
+# Run API server (if needed for other integrations)
+python backend/api.py
 ```
+
+**Note:** Python backend is completely optional. The web app works without it.
 
 ## 📖 Mathematical Background
 
@@ -200,9 +143,9 @@ MIT License - feel free to use for educational purposes!
 ## 🏆 Credits
 
 Created for Information Theory course - Task #2
-- **Frontend**: Retro 90s pixel art design with HTML/CSS/JS
-- **Backend**: Python implementation of Shannon's formulas
+- **Design**: Retro 90s pixel art style
 - **Font**: [Press Start 2P](https://fonts.google.com/specimen/Press+Start+2P) by Google Fonts
+- **Calculations**: Shannon's Information Theory formulas
 
 ---
 
